@@ -123,6 +123,7 @@ int main(int argc, char **argv)
 		// Launch Neek2o if the "Neek2o" option is selected
 		if (pressed & WPAD_BUTTON_A && selectedOption == 1)
 		{
+			MP3Player_Stop();
 			WII_LaunchTitle(TITLE_ID(0x00010001,0x4e4b324f)); // Europe
 		}
 
