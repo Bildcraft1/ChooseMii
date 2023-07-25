@@ -1,3 +1,4 @@
 build/
 WiiBootloader.elf
 WiiBootloader.dol
+.vscode/
