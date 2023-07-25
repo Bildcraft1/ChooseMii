@@ -133,6 +133,12 @@ int main(int argc, char **argv)
             exit(0);
         }
 
+		// When B is pressed, stop the Music
+		if(pressed & WPAD_BUTTON_B) {
+			MP3Player_Stop();
+		}
+
+
 	}
 
 	return 0;
