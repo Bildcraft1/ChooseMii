@@ -127,7 +127,7 @@ int main(int argc, char **argv)
 		}
 
         // Launch Homebrew if the "HB" option is selected
-        if (pressed & WPAD_BUTTON_A && selectedOption == 1)
+        if (pressed & WPAD_BUTTON_A && selectedOption == 2)
         {
             exit(0);
         }
