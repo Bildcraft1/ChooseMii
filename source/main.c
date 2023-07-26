@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 
 	int selectedOption = 0;
 	int numOptions = 4;
-	char *options[] = {"Wii Menu", "Neek2o", "Homebrew Launcher", "USB Loader-GX"};
+	char *options[] = {"Continue to Wii Menu", "Neek2o", "Homebrew", "USB LoaderGX"};
 	bool blankMii = false;
 
 	MP3Player_PlayBuffer(sample_mp3, sample_mp3_size, NULL);
@@ -90,7 +90,12 @@ int main(int argc, char **argv)
 		// Clear the screen
 		printf("\x1b[2J");
 
-		printf("Wii Bootloader\n");
+
+		printf("  _____ __                       __  ___ _  _ \n");
+		printf(" / ___// /  ___  ___   ___ ___  /  |/  /(_)(_) \n");
+		printf("/ /__ / _ \\/ _ \\/ _ \\ (_-</ -_)/ /|_/ // // / \n");
+		printf("\\___//_//_/\\___/\\___//___/\\__//_/  /_//_//_/ \n");
+		printf("                                              \n");
 
 		if (blankMii) {
 			printf("BlankMii Mode Active");
@@ -122,7 +127,6 @@ int main(int argc, char **argv)
 		if (pressed & WPAD_BUTTON_A && selectedOption == 0)
 		{
 			SYS_ResetSystem(SYS_RETURNTOMENU, 0, 0);
-			printf("Exiting to Wii Menu...\n");
 		}
 
 		// Launch Neek2o if the "Neek2o" option is selected
@@ -153,6 +157,7 @@ int main(int argc, char **argv)
 
 		if (pressed & WPAD_BUTTON_1) {
 			MP3Player_Stop();
+			WPAD_Shutdown();
 			blankMii = true;
 			printf("BlankMii Active, Restart your Wii");
 		}
