@@ -4,12 +4,53 @@
 #include <asndlib.h>
 #include <mp3player.h>
 #include <wiiuse/wpad.h>
+#include <unistd.h>
+
+#include <fat.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
 
 #include "sample_mp3.h"
+#define FILENAME "ChooseMii.txt"
 
 static void *xfb = NULL;
 static GXRModeObj *rmode = NULL;
 #define TITLE_ID(x, y) (((u64)(x) << 32) | (y))
+
+int printConfig()
+{
+    FILE *fp;
+    char line[256];
+
+    // Mount the SD card
+    if (!fatInitDefault())
+    {
+        printf("Failed to initialize FAT filesystem\n");
+        return 1;
+    }
+
+    // Open the file for reading
+    fp = fopen(FILENAME, "r");
+    if (fp == NULL)
+    {
+        printf("Failed to open file %s\n", FILENAME);
+        return 1;
+    }
+
+    // Read and print each line of the file
+    while (fgets(line, sizeof(line), fp) != NULL)
+    {
+        printf("%s", line);
+    }
+
+    // Clean up
+    fclose(fp);
+
+    return 0;
+}
 
 //---------------------------------------------------------------------------------
 int main(int argc, char **argv)
@@ -69,7 +110,8 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
-		if(!blankMii){
+		if (!blankMii)
+		{
 			WPAD_ScanPads();
 		}
 
@@ -90,29 +132,31 @@ int main(int argc, char **argv)
 		// Clear the screen
 		printf("\x1b[2J");
 
-
 		printf("  _____ __                       __  ___ _  _ \n");
 		printf(" / ___// /  ___  ___   ___ ___  /  |/  /(_)(_) \n");
 		printf("/ /__ / _ \\/ _ \\/ _ \\ (_-</ -_)/ /|_/ // // / \n");
 		printf("\\___//_//_/\\___/\\___//___/\\__//_/  /_//_//_/ \n");
 		printf("                                              \n");
 
-		if (blankMii) {
-			printf("BlankMii Mode Active");
-		} else {
-
-		// Print the menu options
-		for (int i = 0; i < numOptions; i++)
+		if (blankMii)
 		{
-			if (i == selectedOption)
-			{
-				printf("> %s\n", options[i]);
-			}
-			else
-			{
-				printf("  %s\n", options[i]);
-			}
+			printf("BlankMii Mode Active");
 		}
+		else
+		{
+
+			// Print the menu options
+			for (int i = 0; i < numOptions; i++)
+			{
+				if (i == selectedOption)
+				{
+					printf("> %s\n", options[i]);
+				}
+				else
+				{
+					printf("  %s\n", options[i]);
+				}
+			}
 		}
 		// Wait for the next frame
 		VIDEO_WaitVSync();
@@ -155,11 +199,22 @@ int main(int argc, char **argv)
 			MP3Player_Stop();
 		}
 
-		if (pressed & WPAD_BUTTON_1) {
+		if (pressed & WPAD_BUTTON_1)
+		{
 			MP3Player_Stop();
 			WPAD_Shutdown();
 			blankMii = true;
 			printf("BlankMii Active, Restart your Wii");
+		}
+
+		if (pressed & WPAD_BUTTON_2)
+		{
+			MP3Player_Stop();
+			
+			// Clear the screen
+			printf("\x1b[2J");
+			
+			printConfig();
 		}
 	}
 
